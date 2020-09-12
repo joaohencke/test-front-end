@@ -1,0 +1,18 @@
+$theme-colors: (
+  'primary': #4169E1,
+  'secondary': #959597,
+  'success': #71c59b,
+  'info': #299dad,
+  'warning': #ed873d,
+  'danger': #ad2929,
+  'extra': #8866ee,
+);
+
+@import '../../../node_modules/bootstrap';
+
+body {
+  font-size: 1rem;
+  font-family: 'Montserrat', sans-serif;
+  max-height: 100vh;
+  overflow: scroll;
+}
