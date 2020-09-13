@@ -19,6 +19,7 @@
     "react-scripts": "3.4.3"
   },
   "scripts": {
+    "start:prod": "node server.js",
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",

@@ -1,4 +1,4 @@
-FROM node:12-alpine AS build
+FROM node:12 AS build
 
 COPY ["package.json", "yarn.lock", ".eslintrc.js", "lerna.json", ".prettierrc.js", ".eslintignore", "./"]
 COPY ["packages/", "./packages"]
@@ -6,15 +6,15 @@ COPY ["packages/", "./packages"]
 WORKDIR /webapp
 
 RUN yarn &&\
-  yarn build:webapp
+  yarn build
 
 RUN rm -rf /node_modules
 
-FROM node:12-alpine
+FROM node:12
 COPY --from=build / /
 
-WORKDIR /webapp/client
+# WORKDIR /webapp/packages/client
 
 RUN yarn install --production
 
-ENTRYPOINT [ "node", "server.js" ]
+ENTRYPOINT [ "yarn", "start" ]

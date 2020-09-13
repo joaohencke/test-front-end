@@ -5,6 +5,10 @@
   "author": "Joao Hencke <joao.hencke@gmail.com>",
   "license": "MIT",
   "private": true,
+  "scripts": {
+    "build": "lerna run build",
+    "start": "lerna run start:prod --stream"
+  },
   "workspaces": {
     "packages": [
       "packages/*"
