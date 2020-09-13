@@ -1,13 +1,19 @@
-import React, { useRef, useEffect, useReducer, useMemo } from 'react';
+/* eslint-disable react/no-array-index-key */
+import React, { useRef, useEffect, useMemo, useCallback } from 'react';
 import { Table as UITable } from '@seven/ui';
+import { useReducer } from '@seven/hooks';
 import propTypes from 'prop-types';
+import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import reducer, { initialState } from './reducer';
-import { types } from './actions';
+import { types, sort, filter } from './actions';
+import SearchForm from '../SearchForm';
 
-export default function Table({ data, columns, ItemComponent, infiniteScroll }) {
+export default function Table({ data, columns, searchable, ItemComponent, infiniteScroll }) {
   const ref = useRef();
-  const [{ size }, dispatch] = useReducer(reducer, {
+  const [{ size, items, orderBy }, dispatch] = useReducer(reducer, {
     ...initialState,
+    items: data,
+    allItems: data,
     size: infiniteScroll ? initialState.size : data?.length,
   });
 
@@ -28,17 +34,25 @@ export default function Table({ data, columns, ItemComponent, infiniteScroll }) 
     };
   }, [infiniteScroll]);
 
-  const pagedData = useMemo(() => data.slice(0, size), [size, data]);
+  const pagedData = useMemo(() => items.slice(0, size), [size, items]);
+
+  const handleSearch = useCallback((value) => dispatch(filter(value)), []);
+  const handleSort = useCallback((column) => dispatch(sort(column)), []);
 
   return (
     <div ref={ref} style={{ overflowY: 'scroll', height: '100vh' }}>
+      {searchable && <SearchForm onSubmit={handleSearch} />}
       <UITable>
         {columns?.length && (
           <thead>
             <tr>
               {columns.map((column) => (
-                <th key={column} scope="col">
-                  {column}
+                <th key={column.label} scope="col" onClick={handleSort}>
+                  {column.label}
+                  &nbsp;
+                  {column.controller === orderBy.field && (
+                    <small>{orderBy.asc ? <FaArrowUp /> : <FaArrowDown />}</small>
+                  )}
                 </th>
               ))}
             </tr>
@@ -46,7 +60,7 @@ export default function Table({ data, columns, ItemComponent, infiniteScroll }) 
         )}
         <tbody>
           {pagedData.map((item, index) => (
-            <ItemComponent item={item} key={index} />
+            <ItemComponent item={item} index={index} key={index} />
           ))}
         </tbody>
       </UITable>
@@ -57,11 +71,13 @@ export default function Table({ data, columns, ItemComponent, infiniteScroll }) 
 Table.propTypes = {
   ItemComponent: propTypes.oneOfType([propTypes.element, propTypes.func]).isRequired,
   data: propTypes.array,
-  columns: propTypes.arrayOf(propTypes.string),
+  columns: propTypes.arrayOf(propTypes.any),
   infiniteScroll: propTypes.bool,
+  searchable: propTypes.bool,
 };
 
 Table.defaultProps = {
+  searchable: true,
   data: [],
   columns: null,
   infiniteScroll: true,

@@ -17,14 +17,31 @@ export default function UsersList() {
     return <PageLoader />;
   }
 
+  const columns = [
+    {
+      label: '#',
+    },
+    {
+      label: 'Name',
+      controller: 'name',
+      sortable: true,
+    },
+    {
+      label: 'Age',
+      controller: 'age',
+      sortable: true,
+    },
+  ];
+
   return (
     <Page>
       <Table
-        columns={['#', 'Name', 'Age']}
+        searchable
+        columns={columns}
         data={data}
-        ItemComponent={({ item }) => (
+        ItemComponent={({ item, index }) => (
           <tr>
-            <th scope="row">#</th>
+            <th scope="row">{index + 1}</th>
             <td>{item.name}</td>
             <td>{item.age}</td>
           </tr>
