@@ -1,16 +1,26 @@
-# Teste Front-End | SevenApps
+# Front-End | SevenApps
 
-O seu desáfio será de criar uma pagina web, em React.js, com uma listagem para exibir o nome e a idade dos usuários e que seja possível filtrar os usuários por nome ou idade. O estilo da pagina e dos componentes fica ao seu critério.
+Requirements:
+  * Docker & Docker compose
+  * NodeJS
 
-Vamos analisar os seguintes pontos:
+To run project in production mode, open the terminal at root folder 
+```bash
+docker-compose up
+```
 
+It will download dependencies, generate build version and start the server at [3000](http//localhost:3000)
 
-- Organização do código
-- Separação dos componentes
-- Performance
-- Estilo dos componentes
-- Testes unitários(se possível)
-- Libraries usadas
+To run project in dev mode, you should install dependencies running at root folder 
+```bash
+yarn install
+```
 
+Then step into client folder and run `start`
+```bash
+cd packages/client
+yarn start
+```
 
-###  Api para busca dos usuários: GET https://random-persons.herokuapp.com/users
+This will start server at [3000](http//localhost:3000).
+
