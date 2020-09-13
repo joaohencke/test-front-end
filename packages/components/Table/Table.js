@@ -1,5 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import React, { useRef, useEffect, useMemo, useCallback } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import { Table as UITable } from '@seven/ui';
 import { useReducer, useInfiniteScroll } from '@seven/hooks';
 import propTypes from 'prop-types';
