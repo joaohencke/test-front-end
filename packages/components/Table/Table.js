@@ -1,37 +1,27 @@
 /* eslint-disable react/no-array-index-key */
 import React, { useRef, useEffect, useMemo, useCallback } from 'react';
 import { Table as UITable } from '@seven/ui';
-import { useReducer } from '@seven/hooks';
+import { useReducer, useInfiniteScroll } from '@seven/hooks';
 import propTypes from 'prop-types';
 import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import reducer, { initialState } from './reducer';
 import { types, sort, filter } from './actions';
 import SearchForm from '../SearchForm';
+import Container from './styles';
 
 export default function Table({ data, columns, searchable, ItemComponent, infiniteScroll }) {
-  const ref = useRef();
   const [{ size, items, orderBy }, dispatch] = useReducer(reducer, {
     ...initialState,
     items: data,
     allItems: data,
     size: infiniteScroll ? initialState.size : data?.length,
   });
+  const [ref, { dettach }] = useInfiniteScroll({
+    onEndReached: () => dispatch({ type: types.INCREASE }),
+  });
 
   useEffect(() => {
-    const elm = ref.current;
-    function scrollFn() {
-      if (elm.scrollTop + elm.clientHeight >= elm.scrollHeight) {
-        dispatch({ type: types.INCREASE });
-      }
-    }
-    if (infiniteScroll) {
-      elm.addEventListener('scroll', scrollFn);
-    }
-    return () => {
-      if (infiniteScroll) {
-        elm.removeEventListener('scroll', scrollFn);
-      }
-    };
+    if (!infiniteScroll) dettach();
   }, [infiniteScroll]);
 
   const pagedData = useMemo(() => items.slice(0, size), [size, items]);
@@ -40,20 +30,25 @@ export default function Table({ data, columns, searchable, ItemComponent, infini
   const handleSort = useCallback((column) => dispatch(sort(column)), []);
 
   return (
-    <div ref={ref} style={{ overflowY: 'scroll', height: '100vh' }}>
+    <Container ref={ref}>
       {searchable && <SearchForm onSubmit={handleSearch} />}
       <UITable>
         {columns?.length && (
           <thead>
             <tr>
               {columns.map((column) => (
-                <th key={column.label} scope="col" onClick={handleSort}>
+                <UITable.TH
+                  key={column.label}
+                  scope="col"
+                  clickable={column.sortable}
+                  onClick={() => handleSort(column)}
+                >
                   {column.label}
                   &nbsp;
                   {column.controller === orderBy.field && (
                     <small>{orderBy.asc ? <FaArrowUp /> : <FaArrowDown />}</small>
                   )}
-                </th>
+                </UITable.TH>
               ))}
             </tr>
           </thead>
@@ -64,7 +59,7 @@ export default function Table({ data, columns, searchable, ItemComponent, infini
           ))}
         </tbody>
       </UITable>
-    </div>
+    </Container>
   );
 }
 
