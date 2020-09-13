@@ -30,36 +30,38 @@ export default function Table({ data, columns, searchable, ItemComponent, infini
   const handleSort = useCallback((column) => dispatch(sort(column)), []);
 
   return (
-    <Container ref={ref}>
+    <>
       {searchable && <SearchForm onSubmit={handleSearch} />}
-      <UITable>
-        {columns?.length && (
-          <thead>
-            <tr>
-              {columns.map((column) => (
-                <UITable.TH
-                  key={column.label}
-                  scope="col"
-                  clickable={column.sortable}
-                  onClick={() => handleSort(column)}
-                >
-                  {column.label}
-                  &nbsp;
-                  {column.controller === orderBy.field && (
-                    <small>{orderBy.asc ? <FaArrowUp /> : <FaArrowDown />}</small>
-                  )}
-                </UITable.TH>
-              ))}
-            </tr>
-          </thead>
-        )}
-        <tbody>
-          {pagedData.map((item, index) => (
-            <ItemComponent item={item} index={index} key={index} />
-          ))}
-        </tbody>
-      </UITable>
-    </Container>
+      <Container ref={ref}>
+        <UITable>
+          {columns?.length && (
+            <thead>
+              <tr>
+                {columns.map((column) => (
+                  <UITable.TH
+                    key={column.label}
+                    scope="col"
+                    clickable={column.sortable}
+                    onClick={() => handleSort(column)}
+                  >
+                    {column.label}
+                    &nbsp;
+                    {column.controller === orderBy.field && (
+                      <small>{orderBy.asc ? <FaArrowUp /> : <FaArrowDown />}</small>
+                    )}
+                  </UITable.TH>
+                ))}
+              </tr>
+            </thead>
+          )}
+          <tbody>
+            {pagedData.map((item, index) => (
+              <ItemComponent item={item} index={index} key={index} />
+            ))}
+          </tbody>
+        </UITable>
+      </Container>
+    </>
   );
 }
 
