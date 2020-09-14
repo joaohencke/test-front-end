@@ -16,7 +16,7 @@ export default function SearchForm({ onSubmit, onChange }) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-2">
+    <form onSubmit={handleSubmit} className="mb-4">
       <div className="input-group">
         <input type="search" className="form-control" name="search" onChange={handleChange} />
         <div className="input-group-append">
