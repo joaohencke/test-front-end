@@ -31,7 +31,7 @@ export default function Table({ data, columns, searchable, ItemComponent, infini
 
   return (
     <>
-      {searchable && <SearchForm onSubmit={handleSearch} />}
+      {searchable && <SearchForm onSubmit={handleSearch} onChange={handleSearch} />}
       <Container ref={ref}>
         <UITable>
           {columns?.length && (
